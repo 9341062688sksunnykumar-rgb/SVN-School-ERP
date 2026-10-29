@@ -1,0 +1,231 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: students
+    description: Student records
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /students:
+    get:
+      operationId: listStudents
+      tags: [students]
+      summary: List and filter students
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 120
+        - name: className
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [Class 1, Class 2, Class 3, Class 4, Class 5, Class 6, Class 7, Class 8]
+      responses:
+        "200":
+          description: Student records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
+    post:
+      operationId: createStudent
+      tags: [students]
+      summary: Add a student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentInput"
+      responses:
+        "201":
+          description: Student created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+        "400":
+          description: Invalid student details
+        "409":
+          description: Admission number already exists
+  /students/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getStudent
+      tags: [students]
+      summary: Get a student record
+      responses:
+        "200":
+          description: Student record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+        "404":
+          description: Student not found
+    put:
+      operationId: updateStudent
+      tags: [students]
+      summary: Update a student record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentInput"
+      responses:
+        "200":
+          description: Student updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+        "400":
+          description: Invalid student details
+        "404":
+          description: Student not found
+        "409":
+          description: Admission number already exists
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    Student:
+      type: object
+      required:
+        - id
+        - admissionNumber
+        - name
+        - dateOfBirth
+        - gender
+        - className
+        - section
+        - admissionDate
+        - fatherName
+        - motherName
+        - guardianPhone
+        - address
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        admissionNumber:
+          type: string
+        name:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [Female, Male, Other]
+        className:
+          type: string
+          enum: [Class 1, Class 2, Class 3, Class 4, Class 5, Class 6, Class 7, Class 8]
+        section:
+          type: string
+        admissionDate:
+          type: string
+          format: date
+        fatherName:
+          type: string
+        motherName:
+          type: string
+        guardianPhone:
+          type: string
+        address:
+          type: string
+        status:
+          type: string
+    StudentInput:
+      type: object
+      required:
+        - admissionNumber
+        - name
+        - dateOfBirth
+        - gender
+        - className
+        - section
+        - admissionDate
+        - fatherName
+        - motherName
+        - guardianPhone
+        - address
+      properties:
+        admissionNumber:
+          type: string
+          minLength: 1
+          maxLength: 32
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [Female, Male, Other]
+        className:
+          type: string
+          enum: [Class 1, Class 2, Class 3, Class 4, Class 5, Class 6, Class 7, Class 8]
+        section:
+          type: string
+          minLength: 1
+          maxLength: 20
+        admissionDate:
+          type: string
+          format: date
+        fatherName:
+          type: string
+          maxLength: 120
+        motherName:
+          type: string
+          maxLength: 120
+        guardianPhone:
+          type: string
+          minLength: 7
+          maxLength: 20
+          pattern: '^[0-9+() -]{7,20}$'
+        address:
+          type: string
+          minLength: 1
+          maxLength: 500
