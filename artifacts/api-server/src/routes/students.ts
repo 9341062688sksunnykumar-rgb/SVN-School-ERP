@@ -163,4 +163,31 @@ router.put("/students/:id", async (req, res): Promise<void> => {
   }
 });
 
+router.delete("/students/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [deletedStudent] = await db
+      .delete(studentsTable)
+      .where(eq(studentsTable.id, id))
+      .returning();
+
+    if (!deletedStudent) {
+      return res.status(404).json({
+        message: "Student not found",
+      });
+    }
+
+    return res.json({
+      message: "Student deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete student error:", error);
+
+    return res.status(500).json({
+      message: "Unable to delete student",
+    });
+  }
+});
+
 export default router;

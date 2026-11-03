@@ -20,6 +20,7 @@ import {
   Eye,
   LoaderCircle,
   Pencil,
+  Trash2,
   Plus,
   Search,
   UsersRound,
@@ -267,6 +268,28 @@ export default function StudentManagementPage() {
     }
   };
 
+  const deleteStudent = async (id: string, name: string) => {
+  const confirmed = window.confirm(`Delete ${name}?`);
+
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(`/api/students/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to delete student");
+    }
+
+    await queryClient.invalidateQueries({
+      queryKey: getListStudentsQueryKey(),
+    });
+  } catch (error) {
+    setSubmitError("Unable to delete student. Please try again.");
+  }
+};
+
   const students = listQuery.data ?? [];
   const isEditor = panel?.mode === "edit" || panel?.mode === "create";
   const currentStudent = detailQuery.data;
@@ -343,7 +366,17 @@ export default function StudentManagementPage() {
                     <td>{student.fatherName || student.motherName || "—"}</td>
                     <td className="whitespace-nowrap">{student.guardianPhone}</td>
                     <td><span className={`pill ${student.status.toLowerCase() === "active" ? "pill-green" : "pill-blue"}`} data-testid={`status-student-${student.id}`}>{student.status}</span></td>
-                    <td><div className="flex gap-1"><Button variant="ghost" size="icon" onClick={() => setPanel({ mode: "view", id: student.id })} aria-label={`View ${student.name}`} data-testid={`button-view-student-${student.id}`}><Eye size={15} /></Button><Button variant="ghost" size="icon" onClick={() => { setSubmitError(""); setPanel({ mode: "edit", id: student.id }); }} aria-label={`Edit ${student.name}`} data-testid={`button-edit-student-${student.id}`}><Pencil size={14} /></Button></div></td>
+                    <td><div className="flex gap-1"><Button variant="ghost" size="icon" onClick={() => setPanel({ mode: "view", id: student.id })} aria-label={`View ${student.name}`} data-testid={`button-view-student-${student.id}`}><Eye size={15} /></Button><Button variant="ghost" size="icon" onClick={() => { setSubmitError(""); setPanel({ mode: "edit", id: student.id }); }} aria-label={`Edit ${student.name}`} data-testid={`button-edit-student-${student.id}`}><Pencil size={14} /></Button>
+                   <Button
+  variant="ghost"
+  size="icon"
+  onClick={() => deleteStudent(student.id, student.name)}
+  aria-label={`Delete ${student.name}`}
+  data-testid={`button-delete-student-${student.id}`}
+>
+  <Trash2 size={14} />
+</Button>
+                    </div></td>
                   </tr>)}
                 </tbody>
               </table>
