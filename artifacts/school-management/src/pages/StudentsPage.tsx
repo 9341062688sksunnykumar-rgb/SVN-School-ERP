@@ -1,4 +1,4 @@
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+﻿import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -65,7 +65,7 @@ const emptyStudent: StudentInput = {
 type PanelMode = "view" | "edit" | "create";
 
 function formatDate(value: string) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const date = new Date(`${value.slice(0, 10)}T00:00:00`);
   return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
@@ -213,7 +213,7 @@ function StudentForm({
           <Button type="button" variant="outline" onClick={onCancel} disabled={busy} data-testid="button-cancel-student">Cancel</Button>
           <Button type="submit" disabled={busy} className="bg-[#246891] text-white hover:bg-[#1d5879]" data-testid="button-save-student">
             {busy ? <LoaderCircle size={15} className="mr-2 animate-spin" /> : <Check size={15} className="mr-2" />}
-            {busy ? "Saving…" : mode === "create" ? "Add student" : "Save changes"}
+            {busy ? "Savingâ€¦" : mode === "create" ? "Add student" : "Save changes"}
           </Button>
         </div>
       </form>
@@ -274,7 +274,7 @@ export default function StudentManagementPage() {
   if (!confirmed) return;
 
   try {
-    const response = await fetch(`/api/students/${id}`, {
+    const response = await fetch(`https://svn-school-erp.onrender.com/api/students/${id}`, {
       method: "DELETE",
     });
 
@@ -331,7 +331,7 @@ export default function StudentManagementPage() {
             <ChevronDown size={13} className="pointer-events-none absolute right-9 top-3 text-[#8496a3]" />
           </label>
           <span className="whitespace-nowrap text-[11px] text-[#8293a1]" data-testid="text-student-count">
-            {listQuery.isLoading ? "Loading records…" : `${students.length} ${students.length === 1 ? "record" : "records"}`}
+            {listQuery.isLoading ? "Loading recordsâ€¦" : `${students.length} ${students.length === 1 ? "record" : "records"}`}
           </span>
         </div>
 
@@ -361,9 +361,9 @@ export default function StudentManagementPage() {
                 <tbody>
                   {students.map(student => <tr key={student.id} data-testid={`row-student-${student.id}`}>
                     <td><div className="flex items-center gap-3"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#e8f2f7] text-[11px] font-bold text-[#47718a]" aria-hidden="true">{initials(student.name)}</span><div className="min-w-0"><p className="font-bold text-[#304b63]" data-testid={`text-student-name-${student.id}`}>{student.name}</p><p className="text-[10px] text-[#91a0ac]">{formatDate(student.dateOfBirth)}</p></div></div></td>
-                    <td>{student.className}<span className="text-[#91a0ac]"> · {student.section}</span></td>
+                    <td>{student.className}<span className="text-[#91a0ac]"> Â· {student.section}</span></td>
                     <td className="font-medium text-[#506a7f]">{student.admissionNumber}</td>
-                    <td>{student.fatherName || student.motherName || "—"}</td>
+                    <td>{student.fatherName || student.motherName || "â€”"}</td>
                     <td className="whitespace-nowrap">{student.guardianPhone}</td>
                     <td><span className={`pill ${student.status.toLowerCase() === "active" ? "pill-green" : "pill-blue"}`} data-testid={`status-student-${student.id}`}>{student.status}</span></td>
                     <td><div className="flex gap-1"><Button variant="ghost" size="icon" onClick={() => setPanel({ mode: "view", id: student.id })} aria-label={`View ${student.name}`} data-testid={`button-view-student-${student.id}`}><Eye size={15} /></Button><Button variant="ghost" size="icon" onClick={() => { setSubmitError(""); setPanel({ mode: "edit", id: student.id }); }} aria-label={`Edit ${student.name}`} data-testid={`button-edit-student-${student.id}`}><Pencil size={14} /></Button>
@@ -387,8 +387,8 @@ export default function StudentManagementPage() {
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#e8f2f7] text-[11px] font-bold text-[#47718a]" aria-hidden="true">{initials(student.name)}</span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2"><div><h3 className="truncate text-[13px] font-bold text-[#304b63]">{student.name}</h3><p className="mt-0.5 text-[11px] text-[#8192a0]">{student.admissionNumber}</p></div><span className={`pill ${student.status.toLowerCase() === "active" ? "pill-green" : "pill-blue"}`}>{student.status}</span></div>
-                    <p className="mt-2 text-[12px] text-[#526c80]">{student.className} · Section {student.section}</p>
-                    <p className="mt-1 text-[11px] text-[#8192a0]">{student.fatherName || student.motherName || "Guardian not listed"} · {student.guardianPhone}</p>
+                    <p className="mt-2 text-[12px] text-[#526c80]">{student.className} Â· Section {student.section}</p>
+                    <p className="mt-1 text-[11px] text-[#8192a0]">{student.fatherName || student.motherName || "Guardian not listed"} Â· {student.guardianPhone}</p>
                     <div className="mt-3 flex gap-2"><Button variant="outline" size="sm" onClick={() => setPanel({ mode: "view", id: student.id })} data-testid={`button-view-student-mobile-${student.id}`}><Eye size={14} className="mr-1.5" />View</Button><Button variant="outline" size="sm" onClick={() => { setSubmitError(""); setPanel({ mode: "edit", id: student.id }); }} data-testid={`button-edit-student-mobile-${student.id}`}><Pencil size={13} className="mr-1.5" />Edit</Button></div>
                   </div>
                 </div>
@@ -431,7 +431,7 @@ function StudentDetails({ student, onClose }: { student: Student; onClose: () =>
     ["Admission number", student.admissionNumber],
     ["Date of birth", formatDate(student.dateOfBirth)],
     ["Gender", student.gender],
-    ["Class", `${student.className} · Section ${student.section}`],
+    ["Class", `${student.className} Â· Section ${student.section}`],
     ["Admission date", formatDate(student.admissionDate)],
     ["Father's name", student.fatherName || "Not provided"],
     ["Mother's name", student.motherName || "Not provided"],
@@ -455,3 +455,4 @@ function StudentDetails({ student, onClose }: { student: Student; onClose: () =>
     </div>
   );
 }
+

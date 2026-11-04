@@ -108,7 +108,7 @@ function PortalLogin({ onAdminPreview }: { onAdminPreview: () => void }) {
   const password = String(formData.get("password") || "");
 
   try {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch("https://svn-school-erp.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -180,7 +180,7 @@ function App() {
   setStaffLoading(true);
 
   try {
-    const response = await fetch("/api/staff");
+    const response = await fetch("https://svn-school-erp.onrender.com/api/staff");
 
     if (!response.ok) {
       throw new Error("Unable to load staff");
@@ -198,7 +198,7 @@ const saveAttendance = async (studentId: string, status: string) => {
   const today = new Date().toISOString().split('T')[0];
 
   try {
-    const response = await fetch('/api/attendance', {
+    const response = await fetch('https://svn-school-erp.onrender.com/api/attendance', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -225,7 +225,7 @@ const saveAttendance = async (studentId: string, status: string) => {
 const loadAttendance = async () => {
   try {
     const today = new Date().toISOString().split('T')[0];
-    const response = await fetch(`/api/attendance?date=${today}`);
+    const response = await fetch(`https://svn-school-erp.onrender.com/api/attendance?date=${today}`);
 
     if (!response.ok) {
       throw new Error("Unable to load attendance");
@@ -249,7 +249,7 @@ const deleteStaff = async (staffMember: Staff) => {
   if (!window.confirm(`Delete ${staffMember.name}?`)) return;
 
   try {
-    const response = await fetch(`/api/staff/${staffMember.id}`, {
+    const response = await fetch(`https://svn-school-erp.onrender.com/api/staff/${staffMember.id}`, {
       method: 'DELETE',
     });
 
@@ -284,7 +284,7 @@ useEffect(() => {
     if (kind === 'staff') {
       try {
   const response = await fetch(
-    dialog?.id ? `/api/staff/${dialog.id}` : '/api/staff',
+    dialog?.id ? `https://svn-school-erp.onrender.com/api/staff/${dialog.id}` : 'https://svn-school-erp.onrender.com/api/staff',
     {
       method: dialog?.id ? 'PUT' : 'POST',
       headers: {
@@ -683,6 +683,7 @@ function NotFound() { return <div className="surface-card mx-auto max-w-lg p-8 t
 export default function RoutedApp() {
   return <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><App/></WouterRouter>;
 }
+
 
 
 
