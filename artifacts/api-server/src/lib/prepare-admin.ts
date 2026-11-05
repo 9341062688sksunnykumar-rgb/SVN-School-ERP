@@ -23,8 +23,8 @@ export async function prepareAdminLogin() {
     console.warn('Admin setup skipped: configure ADMIN_USER_ID and ADMIN_PASSWORD in Render Environment.');
     return;
   }
-  if (password.length < 12) {
-    throw new Error('ADMIN_PASSWORD must have at least 12 characters.');
+  if (password.length < 8) {
+    throw new Error('ADMIN_PASSWORD must have at least 8 characters.');
   }
   const name = process.env.ADMIN_NAME?.trim() || 'School Administrator';
   const hash = await bcrypt.hash(password, 12);
@@ -36,3 +36,4 @@ export async function prepareAdminLogin() {
   );
   console.info('Admin login database ready.');
 }
+
