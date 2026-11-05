@@ -17,6 +17,26 @@ export async function prepareAdminLogin() {
     )
   `);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS students (
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      admission_number text NOT NULL UNIQUE,
+      name text NOT NULL,
+      date_of_birth date NOT NULL,
+      gender text NOT NULL,
+      class_name text NOT NULL,
+      section text NOT NULL,
+      admission_date date NOT NULL,
+      father_name text NOT NULL DEFAULT '',
+      mother_name text NOT NULL DEFAULT '',
+      guardian_phone text NOT NULL,
+      address text NOT NULL,
+      status text NOT NULL DEFAULT 'Active',
+      created_at timestamptz NOT NULL DEFAULT now(),
+      updated_at timestamptz NOT NULL DEFAULT now()
+    )
+  `);
+
   const userId = process.env.ADMIN_USER_ID?.trim();
   const password = process.env.ADMIN_PASSWORD;
   if (!userId || !password) {
@@ -36,4 +56,5 @@ export async function prepareAdminLogin() {
   );
   console.info('Admin login database ready.');
 }
+
 
