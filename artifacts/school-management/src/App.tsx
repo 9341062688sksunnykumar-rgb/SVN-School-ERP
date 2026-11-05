@@ -462,6 +462,9 @@ function Metric({ label, value, sub, icon: Icon, tone = 'blue', trend }: { label
   return <div className="surface-card p-4 md:p-5"><div className="flex items-start justify-between"><div><p className="text-[12px] font-semibold text-[#71869a]">{label}</p><p className="font-display mt-2 text-[25px] font-extrabold tracking-tight text-[#243e57]">{value}</p></div><span className={`grid h-10 w-10 place-items-center rounded-xl ${tone === 'mint' ? 'bg-[#e6f5ef] text-[#338363]' : tone === 'gold' ? 'bg-[#fff3df] text-[#a37220]' : 'bg-[#e8f3fa] text-[#36799f]'}`}><Icon size={19}/></span></div><div className="mt-3 flex items-center gap-1.5 text-[11px] text-[#8192a1]">{trend && <span className="font-bold text-[#438c68]">{trend}</span>}{sub}</div></div>;
 }
 function Dashboard({ students, fees, attendance, setLocation }: { students: Student[]; fees: Fee[]; attendance: Record<string, string>; setLocation: (path: string) => void }) {
+  const now = new Date();
+  const greeting = now.getHours() < 12 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
+  const currentDate = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const paid = fees.filter(f => f.status === 'Paid').reduce((sum, f) => sum + f.amount, 0);
   const dueCount = fees.filter(f => f.status === 'Due').length;
   const presentCount = Object.values(attendance).filter(a => a === 'Present').length;
@@ -540,6 +543,7 @@ function FeesPage({ students, fees, onPay, onReceipt }: { students: Student[]; f
   </div>;
 }
 function AttendancePage({ students, attendance, setAttendance, saveAttendance }: { students: Student[]; attendance: Record<string, string>; setAttendance: (value: (current: Record<string, string>) => Record<string, string>) => void; saveAttendance: (studentId: string, status: string) => Promise<void> }) {
+  const currentDate = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const [classFilter, setClassFilter] = useState('Class 5'); const [query, setQuery] = useState('');
   const classStudents = students.filter(s => s.className === classFilter && s.name.toLowerCase().includes(query.toLowerCase()));
   const present = classStudents.filter(s => (attendance[s.id] ?? 'Present') === 'Present').length;
