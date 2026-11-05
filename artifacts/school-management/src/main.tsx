@@ -2,9 +2,15 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import App from './App';
+import { setBaseUrl } from '@workspace/api-client-react';
 import { ErrorBoundary } from '@/components/error-boundary';
 
 import './index.css';
+
+// Point generated student API requests to the deployed backend.
+if (import.meta.env.PROD) {
+  setBaseUrl('https://svn-school-erp.onrender.com');
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
